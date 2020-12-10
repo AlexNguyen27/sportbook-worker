@@ -3,10 +3,10 @@ FROM node:12
 WORKDIR /app
 
 COPY package.json /app
-COPY yarn.lock /app
+COPY package-lock.json /app
 
-RUN yarn
+RUN npm i
 
-EXPOSE 9000
+EXPOSE 9100
 
-CMD ["yarn", "start:dev"]
+CMD ["npm", "run", "start:dev"]
