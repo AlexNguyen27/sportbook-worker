@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import { logger } from 'juno-js';
-import CategoryService from '../services/category.service';
+// import CategoryService from '../services/category.service';
 
 class CatJob {
   static catchMouse() {

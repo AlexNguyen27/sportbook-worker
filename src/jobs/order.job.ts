@@ -4,9 +4,8 @@ import { logger } from 'juno-js';
 import OrderService from '../services/order.service';
 import { redis } from '../components/redis';
 import { ORDER_STATUS } from '../components/constants';
-import Order from '../models/order.model';
 
-const Redis = require('ioredis');
+// const Redis = require('ioredis');
 
 const checkOutOfTime = (startDay: any, endTime: any) => {
   console.log('endtime-------', `${startDay} ${endTime}`);
@@ -19,10 +18,10 @@ const checkOutOfTime = (startDay: any, endTime: any) => {
 class OrderJob {
   static catchMounse() {
     // FOR AUTO FINISHED OR CANCELLED TASK
-    cron.schedule('*/2 * * * *', async () => {
+    cron.schedule('*/10 * * * *', async () => {
       const orders = await OrderService.getOrders({ outOfTime: true });
 
-      orders.forEach(async (order) => {
+      orders.forEach(async (order: any) => {
         const isOutOfTime = checkOutOfTime(order.startDay, order.endTime);
         console.log('isOutOfTime, ', isOutOfTime);
         if (isOutOfTime) {
@@ -37,7 +36,7 @@ class OrderJob {
     });
 
     // FOR USER CREATE NEW ORDER
-    cron.schedule('*/5 * * * *', async () => {
+    cron.schedule('*/30 * * * *', async () => {
       const orders = await OrderService.getOrders({ status: ORDER_STATUS.waiting_for_approve, attributes: ['id', 'status'] });
 
       // TODO

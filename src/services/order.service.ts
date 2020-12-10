@@ -1,4 +1,4 @@
-import { logger } from 'juno-js';
+// import { logger } from 'juno-js';
 import Order from '../models/order.model';
 import { sequelize } from '../models/sequelize';
 import User from '../models/user.model';
@@ -6,7 +6,7 @@ import SubGround from '../models/subGround.model';
 import { ORDER_STATUS } from '../components/constants';
 import HistoryService from './history.service';
 
-const { Op } = require('sequelize');
+// const { Op } = require('sequelize');
 
 class OrderService {
   static async getOrders(filter: any) {
