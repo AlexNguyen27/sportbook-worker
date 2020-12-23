@@ -4,21 +4,25 @@ import { logger } from 'juno-js';
 import OrderService from '../services/order.service';
 import { redis } from '../components/redis';
 import { ORDER_STATUS } from '../components/constants';
+import "moment-timezone";
 
 const checkOutOfTime = (startDay: any, endTime: any) => {
   const day = `${startDay} ${endTime}`;
-  return moment().isAfter(day);
+  console.log('time ------------------', day);
+  return moment().add(7, 'hours').isAfter(day); // add timezone
 };
 
 class OrderJob {
   static catchMounse() {
     // FOR AUTO FINISHED OR CANCELLED TASK
     cron.schedule('*/10 * * * *', async () => {
+      logger.info('😻🖱😻🖱😻🖱😻🖱😻🖱😻🖱');
+
       const orders = await OrderService.getOrders({ outOfTime: true });
 
       orders.forEach(async (order: any) => {
         const isOutOfTime = checkOutOfTime(order.startDay, order.endTime);
-        console.log('isOutOfTime, ', isOutOfTime);
+        console.log('isOutOfTime -----------------', isOutOfTime);
         if (isOutOfTime) {
           if (order.status === ORDER_STATUS.approved) {
             await OrderService.updateStatus(order.id, ORDER_STATUS.cancelled);
