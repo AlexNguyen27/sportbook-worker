@@ -5,16 +5,11 @@ import OrderService from '../services/order.service';
 import { redis } from '../components/redis';
 import { ORDER_STATUS } from '../components/constants';
 
-// const Redis = require('ioredis');
-
 const checkOutOfTime = (startDay: any, endTime: any) => {
-  console.log('endtime-------', `${startDay} ${endTime}`);
   const day = `${startDay} ${endTime}`;
   return moment().isAfter(day);
 };
 
-// TODO
-// WHY CAN NOT ADD TRANSACTION
 class OrderJob {
   static catchMounse() {
     // FOR AUTO FINISHED OR CANCELLED TASK
@@ -32,14 +27,13 @@ class OrderJob {
           }
         }
       });
-      console.log('running a task every two minutes');
+      console.log('outOfTime, running a task every 10 minutes');
     });
 
     // FOR USER CREATE NEW ORDER
-    cron.schedule('*/30 * * * *', async () => {
+    cron.schedule('*/10 * * * *', async () => {
       const orders = await OrderService.getOrders({ status: ORDER_STATUS.waiting_for_approve, attributes: ['id', 'status'] });
 
-      // TODO
       // MAP ALL ORDER ID AND CHECK IF ORDER ID DONT HAVE IN REDIS
       // => CHANGE STATUS TO CANCELLED
       // EX IS 30m
@@ -49,7 +43,7 @@ class OrderJob {
             if (err) {
               console.log('error-------------', err);
             } else if (!result) {
-              console.log('RESULT-------------', result);
+              console.log('result-------------', result);
               await OrderService.updateStatus(order.id, ORDER_STATUS.cancelled);
             }
           });
@@ -57,8 +51,7 @@ class OrderJob {
       } catch (error) {
         console.log('error------------------', error);
       }
-
-      logger.info(JSON.stringify(orders));
+      console.log('waiting_for_approve, running a task every 10 minutes');
     });
   }
 }
