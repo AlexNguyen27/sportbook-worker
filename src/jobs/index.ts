@@ -2,7 +2,7 @@ import CatJob from './cat.job';
 import OrderJob from './order.job';
 
 const executeJobs = () => {
-  CatJob.catchMouse();
+  // CatJob.catchMouse();
 
   OrderJob.catchMounse();
 };
